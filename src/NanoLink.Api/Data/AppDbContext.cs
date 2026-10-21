@@ -7,8 +7,31 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Link> Links => Set<Link>();
 
+    public DbSet<ClickEvent> ClickEvents => Set<ClickEvent>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ClickEvent>(entity =>
+        {
+            entity.ToTable("ClickEvents");
+
+            entity.HasKey(click => click.Id);
+
+            entity.Property(click => click.Code)
+                .HasMaxLength(10)
+                .IsRequired();
+
+            entity.Property(click => click.ClickedAt)
+                .IsRequired();
+
+            entity.Property(click => click.IpAddress)
+                .HasMaxLength(45);
+
+            entity.HasIndex(click => click.Code);
+
+            entity.HasIndex(click => click.ClickedAt);
+        });
+
         modelBuilder.Entity<Link>(entity =>
         {
             entity.ToTable("Links");

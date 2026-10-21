@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NanoLink.Api.Data;
 using NanoLink.Api.Features.RedirectUrl;
 using NanoLink.Api.Features.ShortenUrl;
+using NanoLink.Api.Infrastructure.Analytics;
 using NanoLink.Api.Infrastructure.Cache;
 using StackExchange.Redis;
 
@@ -15,6 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379"));
 builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+
+// Write-behind: cliques são enfileirados no canal e gravados em lote pelo worker
+builder.Services.AddSingleton<ClickEventChannel>();
+builder.Services.AddHostedService<AnalyticsBatchWorker>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<ShortenUrlValidator>();
 builder.Services.AddScoped<ShortenUrlHandler>();

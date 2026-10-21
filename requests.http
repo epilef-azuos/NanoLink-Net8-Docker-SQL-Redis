@@ -24,6 +24,25 @@ GET {{baseUrl}}/ZzZzZz9
 ### Link inexistente de novo (negative cache hit em até 60s) - esperado: 404 Not Found sem query no PostgreSQL
 GET {{baseUrl}}/ZzZzZz9
 
+### Cliques repetidos com User-Agent e Referer customizados - esperado: 302 e registro de analytics em lote
+GET {{baseUrl}}/{{code}}
+User-Agent: NanoLinkLoadTest/1.0 (Chrome)
+Referer: https://www.google.com/search?q=nanolink
+
+### Clique com outro User-Agent (mobile) - esperado: 302
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15
+Referer: https://www.twitter.com/
+
+### Clique com User-Agent de bot - esperado: 302
+GET {{baseUrl}}/{{code}}
+User-Agent: curl/8.5.0
+Referer: https://news.ycombinator.com/
+
+### Clique sem Referer - esperado: 302 e Referer gravado como nulo
+GET {{baseUrl}}/{{code}}
+User-Agent: NanoLinkLoadTest/1.0 (Firefox)
+
 ### Código com caracteres inválidos - esperado: 400 Bad Request
 GET {{baseUrl}}/abc-123
 

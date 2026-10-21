@@ -1,3 +1,6 @@
+using NanoLink.Api.Data.Entities;
+using NanoLink.Api.Infrastructure.Analytics;
+
 namespace NanoLink.Api.Features.RedirectUrl;
 
 public static class RedirectUrlEndpoint
@@ -14,7 +17,9 @@ public static class RedirectUrlEndpoint
 
     private static async Task<IResult> HandleAsync(
         string? code,
+        HttpContext context,
         RedirectUrlHandler handler,
+        ClickEventChannel clickChannel,
         CancellationToken cancellationToken)
     {
         // Validação fail-fast antes de qualquer acesso ao cache ou ao banco
@@ -30,6 +35,15 @@ public static class RedirectUrlEndpoint
             return Results.NotFound(new { message = "Link not found or expired" });
         }
 
+        // Publicação não bloqueante: o 302 não espera pela gravação analítica
+        clickChannel.TryWrite(new ClickEvent(
+            code,
+            context.Connection.RemoteIpAddress?.ToString(),
+            NullIfEmpty(context.Request.Headers.UserAgent),
+            NullIfEmpty(context.Request.Headers.Referer)));
+
         return Results.Redirect(originalUrl, permanent: false);
     }
+
+    private static string? NullIfEmpty(string value) => string.IsNullOrEmpty(value) ? null : value;
 }
