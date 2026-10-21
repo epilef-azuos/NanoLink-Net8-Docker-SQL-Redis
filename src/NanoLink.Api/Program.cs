@@ -77,3 +77,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Torna o ponto de entrada visível para o WebApplicationFactory dos testes de integração
+public partial class Program { }
