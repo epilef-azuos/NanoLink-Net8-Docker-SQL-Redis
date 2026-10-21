@@ -2,12 +2,33 @@
 @contentType = application/json
 
 ### Criar URL encurtada (válida) - esperado: 201 Created
+# Guarda o código retornado para ser usado nos cenários de redirecionamento
 POST {{baseUrl}}/api/links
 Content-Type: {{contentType}}
 
 {
   "originalUrl": "https://www.exemplo.com/artigos/vertical-slice-architecture"
 }
+
+> {% client.global.set("code", response.body.code); %}
+
+### Redirecionamento com link existente (cache miss na 1ª vez, cache hit depois) - esperado: 302 Found + Location
+GET {{baseUrl}}/{{code}}
+
+### Redirecionamento novamente com o mesmo código - esperado: 302 Found servido pelo Redis (sem query no PostgreSQL)
+GET {{baseUrl}}/{{code}}
+
+### Link inexistente (cache miss, grava negative cache) - esperado: 404 Not Found
+GET {{baseUrl}}/ZzZzZz9
+
+### Link inexistente de novo (negative cache hit em até 60s) - esperado: 404 Not Found sem query no PostgreSQL
+GET {{baseUrl}}/ZzZzZz9
+
+### Código com caracteres inválidos - esperado: 400 Bad Request
+GET {{baseUrl}}/abc-123
+
+### Código com mais de 10 caracteres - esperado: 400 Bad Request
+GET {{baseUrl}}/aaaaaaaaaaa
 
 ### Criar URL encurtada sem esquema - esperado: 400 Bad Request
 POST {{baseUrl}}/api/links
