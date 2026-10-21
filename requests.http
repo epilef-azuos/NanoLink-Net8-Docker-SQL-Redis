@@ -106,3 +106,97 @@ Content-Type: {{contentType}}
 {
   "originalUrl": ""
 }
+
+### Analytics agregado do link de teste - esperado: 200 OK com TotalClicks e agrupamentos
+GET {{baseUrl}}/api/links/{{code}}/analytics
+
+### Analytics de link inexistente - esperado: 404 Not Found
+GET {{baseUrl}}/api/links/ZzZzZz9/analytics
+
+### Rate limit 1 de 11 - esperado: 201 Created nos blocos 1 a 6 e 429 a partir do bloco 7 (limite de 10 por minuto por IP; as 4 requisições POST anteriores deste arquivo também contam na janela)
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/1"
+}
+
+### Rate limit 2 de 11 - esperado: 201 Created
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/2"
+}
+
+### Rate limit 3 de 11 - esperado: 201 Created
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/3"
+}
+
+### Rate limit 4 de 11 - esperado: 201 Created
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/4"
+}
+
+### Rate limit 5 de 11 - esperado: 201 Created
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/5"
+}
+
+### Rate limit 6 de 11 - esperado: 201 Created
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/6"
+}
+
+### Rate limit 7 de 11 - esperado: 429 Too Many Requests
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/7"
+}
+
+### Rate limit 8 de 11 - esperado: 429 Too Many Requests
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/8"
+}
+
+### Rate limit 9 de 11 - esperado: 429 Too Many Requests
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/9"
+}
+
+### Rate limit 10 de 11 - esperado: 429 Too Many Requests
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/10"
+}
+
+### Rate limit 11 de 11 - esperado: 429 Too Many Requests com cabeçalho Retry-After
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/rate-limit/11"
+}
