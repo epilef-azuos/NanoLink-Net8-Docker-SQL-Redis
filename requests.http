@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Criar URL encurtada (válida) - esperado: 201 Created
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "https://www.exemplo.com/artigos/vertical-slice-architecture"
+}
+
+### Criar URL encurtada sem esquema - esperado: 400 Bad Request
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "www.exemplo.com/sem-esquema"
+}
+
+### Criar URL encurtada com esquema não permitido - esperado: 400 Bad Request
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": "ftp://exemplo.com/arquivo.zip"
+}
+
+### Criar URL encurtada vazia - esperado: 400 Bad Request
+POST {{baseUrl}}/api/links
+Content-Type: {{contentType}}
+
+{
+  "originalUrl": ""
+}
