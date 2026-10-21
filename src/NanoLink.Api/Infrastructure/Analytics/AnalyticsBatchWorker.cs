@@ -1,5 +1,6 @@
 using NanoLink.Api.Data;
 using NanoLink.Api.Data.Entities;
+using NanoLink.Api.Infrastructure.Enrichment;
 
 namespace NanoLink.Api.Infrastructure.Analytics;
 
@@ -86,6 +87,13 @@ public sealed class AnalyticsBatchWorker(
         {
             using var scope = scopeFactory.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var enricher = scope.ServiceProvider.GetRequiredService<IAnalyticsEnricher>();
+
+            // Enriquecimento fica fora do redirect: roda apenas aqui, em segundo plano
+            foreach (var evt in _buffer)
+            {
+                enricher.EnrichEvent(evt);
+            }
 
             await db.ClickEvents.AddRangeAsync(_buffer, ct);
             await db.SaveChangesAsync(ct);
