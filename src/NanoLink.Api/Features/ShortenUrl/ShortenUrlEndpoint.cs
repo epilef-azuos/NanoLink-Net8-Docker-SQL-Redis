@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.RateLimiting;
+
 namespace NanoLink.Api.Features.ShortenUrl;
 
 public static class ShortenUrlEndpoint
@@ -7,7 +9,8 @@ public static class ShortenUrlEndpoint
         app.MapPost("/api/links", HandleAsync)
             .WithName("ShortenUrl")
             .Produces<ShortenUrlResponse>(StatusCodes.Status201Created)
-            .ProducesValidationProblem(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+            .RequireRateLimiting("create-link");
 
         return app;
     }
