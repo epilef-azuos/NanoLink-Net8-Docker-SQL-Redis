@@ -11,7 +11,9 @@ public static class RedirectUrlEndpoint
     public static IEndpointRouteBuilder MapRedirectUrlEndpoint(this IEndpointRouteBuilder app)
     {
         app.MapGet("/{code}", HandleAsync)
-            .WithName("RedirectUrl");
+            .WithName("RedirectUrl")
+            .WithTags("Links")
+            .WithSummary("Redireciona (302) para a URL original");
 
         return app;
     }

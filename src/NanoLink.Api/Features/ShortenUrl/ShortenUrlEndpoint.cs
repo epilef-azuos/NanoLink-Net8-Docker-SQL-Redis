@@ -10,7 +10,9 @@ public static class ShortenUrlEndpoint
             .WithName("ShortenUrl")
             .Produces<ShortenUrlResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(StatusCodes.Status400BadRequest)
-            .RequireRateLimiting("create-link");
+            .RequireRateLimiting("create-link")
+            .WithTags("Links")
+            .WithSummary("Cria uma URL encurtada");
 
         return app;
     }
