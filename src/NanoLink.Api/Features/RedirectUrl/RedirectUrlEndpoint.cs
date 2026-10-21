@@ -1,3 +1,4 @@
+using System.Net;
 using NanoLink.Api.Data.Entities;
 using NanoLink.Api.Infrastructure.Analytics;
 
@@ -38,12 +39,25 @@ public static class RedirectUrlEndpoint
         // Publicação não bloqueante: o 302 não espera pela gravação analítica
         clickChannel.TryWrite(new ClickEvent(
             code,
-            context.Connection.RemoteIpAddress?.ToString(),
+            ResolveClientIp(context),
             NullIfEmpty(context.Request.Headers.UserAgent),
             NullIfEmpty(context.Request.Headers.Referer)));
 
         return Results.Redirect(originalUrl, permanent: false);
     }
 
-    private static string? NullIfEmpty(string value) => string.IsNullOrEmpty(value) ? null : value;
+    private static string? NullIfEmpty(string? value) => string.IsNullOrEmpty(value) ? null : value;
+
+    private static string? ResolveClientIp(HttpContext context)
+    {
+        // X-Forwarded-For: primeiro IP da lista, para testes manuais com IPs reais via .http
+        var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
+        if (!string.IsNullOrEmpty(forwardedFor)
+            && IPAddress.TryParse(forwardedFor.Split(',')[0].Trim(), out var forwardedIp))
+        {
+            return forwardedIp.ToString();
+        }
+
+        return context.Connection.RemoteIpAddress?.ToString();
+    }
 }

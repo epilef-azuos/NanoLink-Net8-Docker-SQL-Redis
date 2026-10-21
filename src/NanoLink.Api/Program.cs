@@ -4,6 +4,7 @@ using NanoLink.Api.Data;
 using NanoLink.Api.Features.RedirectUrl;
 using NanoLink.Api.Features.ShortenUrl;
 using NanoLink.Api.Infrastructure.Analytics;
+using NanoLink.Api.Infrastructure.Enrichment;
 using NanoLink.Api.Infrastructure.Cache;
 using StackExchange.Redis;
 
@@ -20,6 +21,10 @@ builder.Services.AddSingleton<ICacheService, RedisCacheService>();
 // Write-behind: cliques são enfileirados no canal e gravados em lote pelo worker
 builder.Services.AddSingleton<ClickEventChannel>();
 builder.Services.AddHostedService<AnalyticsBatchWorker>();
+
+// Enriquecimento offline: leitor MMDB em memória (singleton) e enricher por escopo do lote
+builder.Services.AddSingleton<IGeoLocationResolver, MaxMindGeoLocationResolver>();
+builder.Services.AddScoped<IAnalyticsEnricher, AnalyticsEnricher>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<ShortenUrlValidator>();
 builder.Services.AddScoped<ShortenUrlHandler>();

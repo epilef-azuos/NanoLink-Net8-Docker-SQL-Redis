@@ -43,6 +43,40 @@ Referer: https://news.ycombinator.com/
 GET {{baseUrl}}/{{code}}
 User-Agent: NanoLinkLoadTest/1.0 (Firefox)
 
+### Enriquecimento: iPhone vindo do t.co, IP público de teste - esperado: 302, grava iOS / Mobile / t.co
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148
+Referer: https://t.co/abc123
+X-Forwarded-For: 8.8.8.8
+
+### Enriquecimento: tablet Android vindo do LinkedIn - esperado: 302, grava Android / Tablet / linkedin.com
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (Linux; Android 14; SM-X710) AppleWebKit/537.36 Chrome/120.0 Safari/537.36
+Referer: https://www.linkedin.com/feed/
+X-Forwarded-For: 8.8.8.8
+
+### Enriquecimento: Windows Chrome vindo do Google - esperado: 302, grava Windows / Desktop / google.com
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36
+Referer: https://www.google.com/
+X-Forwarded-For: 8.8.8.8
+
+### Enriquecimento: bot de busca sem Referer - esperado: 302, grava Bot / Direct
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+X-Forwarded-For: 8.8.8.8
+
+### Enriquecimento: IP privado via X-Forwarded-For - esperado: 302, grava Local Network
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36
+X-Forwarded-For: 192.168.1.10
+
+### Enriquecimento: lista de IPs no X-Forwarded-For - esperado: 302, usa somente o primeiro (8.8.8.8)
+GET {{baseUrl}}/{{code}}
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36
+Referer: https://news.ycombinator.com/
+X-Forwarded-For: 8.8.8.8, 10.0.0.1
+
 ### Código com caracteres inválidos - esperado: 400 Bad Request
 GET {{baseUrl}}/abc-123
 

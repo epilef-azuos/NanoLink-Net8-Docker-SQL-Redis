@@ -27,6 +27,24 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(click => click.IpAddress)
                 .HasMaxLength(45);
 
+            entity.Property(click => click.CountryCode)
+                .HasMaxLength(2);
+
+            entity.Property(click => click.CountryName)
+                .HasMaxLength(100);
+
+            entity.Property(click => click.CityName)
+                .HasMaxLength(100);
+
+            entity.Property(click => click.OperatingSystem)
+                .HasMaxLength(50);
+
+            entity.Property(click => click.DeviceType)
+                .HasMaxLength(30);
+
+            entity.Property(click => click.ReferrerDomain)
+                .HasMaxLength(150);
+
             entity.HasIndex(click => click.Code);
 
             entity.HasIndex(click => click.ClickedAt);

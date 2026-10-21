@@ -30,4 +30,33 @@ public class ClickEvent
     public string? Referer { get; private init; }
 
     public string? IpAddress { get; private init; }
+
+    public string? CountryCode { get; internal set; }
+
+    public string? CountryName { get; internal set; }
+
+    public string? CityName { get; internal set; }
+
+    public string? OperatingSystem { get; internal set; }
+
+    public string? DeviceType { get; internal set; }
+
+    public string? ReferrerDomain { get; internal set; }
+
+    // Preenchido pelo worker em segundo plano, nunca no caminho do redirecionamento
+    public void Enrich(
+        string? countryCode,
+        string? countryName,
+        string? cityName,
+        string? os,
+        string? deviceType,
+        string? referrerDomain)
+    {
+        CountryCode = countryCode;
+        CountryName = countryName;
+        CityName = cityName;
+        OperatingSystem = os;
+        DeviceType = deviceType;
+        ReferrerDomain = referrerDomain;
+    }
 }
