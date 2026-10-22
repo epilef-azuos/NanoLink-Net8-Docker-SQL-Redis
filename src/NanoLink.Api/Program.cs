@@ -8,6 +8,7 @@ using NanoLink.Api.Features.ShortenUrl;
 using NanoLink.Api.Infrastructure.Analytics;
 using NanoLink.Api.Infrastructure.Enrichment;
 using NanoLink.Api.Infrastructure.Cache;
+using Scalar.AspNetCore;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,7 @@ builder.Services.AddScoped<ShortenUrlHandler>();
 builder.Services.AddScoped<RedirectUrlHandler>();
 builder.Services.AddScoped<GetAnalyticsHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddOpenApi();
 
 // Rate limiting nativo: até 10 criações de link por minuto por IP
 builder.Services.AddRateLimiter(options =>
@@ -65,6 +67,17 @@ var app = builder.Build();
 
 app.UseRateLimiter();
 
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("NanoLink API")
+               .WithTheme(ScalarTheme.Moon)
+               .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
+}
+
 app.MapGet("/", () => "NanoLink API is running on Docker! 🚀");
 app.MapShortenUrlEndpoint();
 app.MapRedirectUrlEndpoint();
@@ -77,3 +90,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Torna o ponto de entrada visível para o WebApplicationFactory dos testes de integração
+public partial class Program { }

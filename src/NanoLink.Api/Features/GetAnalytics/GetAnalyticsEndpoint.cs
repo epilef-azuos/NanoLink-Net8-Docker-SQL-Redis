@@ -6,6 +6,8 @@ public static class GetAnalyticsEndpoint
     {
         app.MapGet("/api/links/{code}/analytics", HandleAsync)
             .WithName("GetLinkAnalytics")
+            .WithTags("Analytics")
+            .WithSummary("Retorna métricas agregadas de cliques de um link")
             .Produces<GetAnalyticsResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 

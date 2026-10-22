@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main, "feature/**"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Verificar formatação e lint
+        run: dotnet format --verify-no-changes
+
+      - name: Compilar a solution
+        run: dotnet build --no-restore --configuration Release
+
+      # O runner ubuntu-latest já traz o Docker Daemon, necessário para os contêineres do Testcontainers
+      - name: Executar testes de integração
+        run: dotnet test --no-build --configuration Release --verbosity normal
