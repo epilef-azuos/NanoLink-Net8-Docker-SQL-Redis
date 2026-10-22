@@ -1,6 +1,6 @@
 # NanoLink 🔗⚡
 
-[![CI](https://github.com/epilef-azuos/NanoLink-Net8-Docker-SQL-Redis/actions/workflows/ci.yml/badge.svg)](https://github.com/epilef-azuos/NanoLink-Net8-Docker-SQL-Redis/actions/workflows/ci.yml)
+[![CI](https://github.com/epilef-azuos/NanoLink-Net9-Docker-SQL-Redis/actions/workflows/ci.yml/badge.svg)](https://github.com/epilef-azuos/NanoLink-Net9-Docker-SQL-Redis/actions/workflows/ci.yml)
 ![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
@@ -32,7 +32,7 @@ Dois caminhos saem da mesma requisição. O **Fast Path** responde ao usuário e
 
 ```mermaid
 flowchart LR
-    C([Cliente]) -->|GET /{code}| API[ASP.NET Core API]
+    C([Cliente]) -->|"GET /{code}"| API[ASP.NET Core API]
 
     subgraph FAST["Fast Path (caminho crítico)"]
         direction LR
